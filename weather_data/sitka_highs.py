@@ -13,14 +13,19 @@ header_row = next(reader)
 dates, highs = [], []
 for row in reader:
     current_date = datetime.strptime(row[2], '%Y-%m-%d')
-    high = int(row[4])
-    dates.append(current_date)
-    highs.append(high)
+    try:
+        high = int(row[4])
+    except ValueError:
+        print(f"Missing data for {current_date}")
+    else:
+        dates.append(current_date)
+        highs.append(high)
 
 # Plot the high temperatures.
 plt.style.use('seaborn-v0_8')
 fig, ax = plt.subplots()
-ax.plot(dates, highs, color='red')
+ax.plot(dates, highs, color='red', alpha=0.5)
+ax.fill_between(dates, highs, facecolor='grey', alpha=0.1)
 
 # Format plot.
 ax.set_title("Daily High Temperatures, July 2021", fontsize=24)
